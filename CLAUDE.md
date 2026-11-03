@@ -16,7 +16,21 @@
 
 | 専門家 | 担当 | 呼ぶタイミング | 主な相談先 |
 |---|---|---|---|
-| （まだいません） | | | |
+| tone-analyst | 音色の分析（tone-analyze）: 楽器の取り出し、区間の境目、1/3 オクターブ・歪み・伸び・アタックの測定と読み方 | 曲と区間を指定されたとき（音作りの最初） | bass-tech |
+| bass-tech | ベースの音作り（tone-design）: tone.json の A/B 候補、感想での手直し、採用の記録 | 分析が終わったとき／弾いた感想を受けたとき | tone-analyst、gx-operator |
+| gx-operator | パッチと実機（gx-patch）: .tsl の生成と確認、BTS の案内、新しい欄の解明、USB・リアンプ、tools の保守 | tone.json ができたとき／欄や形式の質問 | bass-tech |
+
+### 音作りの流れ（ベース・GX-1B）
+
+1. ユーザー: 曲（`input/`）と区間、作りたいパターン（例: 通常とスラップ）
+2. **tone-analyst**: 取り出し → 区間の境目 → パターンごとの特徴と 1/3 オクターブの形
+3. **bass-tech**: パターンごとに A/B の tone.json（`output/rounds/`）
+4. **gx-operator**: 1 つの .tsl にまとめて確認 → ユーザーに案内
+5. ★ユーザーが BTS で読み込んで弾き、感想を返す → 3 に戻る（bass-tech が手直し）
+6. 採用が決まったら、bass-tech が `knowledge/tones/`・`mapping.md`・`tones.md` に記録し、gx-operator が採用版の .tsl を作る
+
+- 曲の音源・stem・録音・.tsl（`input/`・`output/`）はコミットしない。push はユーザーの確認を取ってから。
+- GX-1（ギター）は未対応（guitar-tech はまだいない）。
 
 ## 相談プロトコル（専門家向け）
 
