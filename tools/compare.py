@@ -49,14 +49,18 @@ def _sub(a, b):
     return None if a is None or b is None else round(a - b, 2)
 
 
-def compare_features(target: dict, cands: list[tuple[str, dict]], max_hz: float = 10000.0) -> dict:
-    """特徴（analyze の出力）どうしを比べる。cands は（名前, 特徴）の並び。距離の小さい順に返す。"""
-    lo, hi = NORM_RANGE[0], min(NORM_RANGE[1], max_hz)
+def compare_features(target: dict, cands: list[tuple[str, dict]], max_hz: float = 10000.0,
+                     min_hz: float = DIST_MIN_HZ) -> dict:
+    """特徴（analyze の出力）どうしを比べる。cands は（名前, 特徴）の並び。距離の小さい順に返す。
+
+    min_hz: 距離と揃えに入れる下限。DI で原曲と同じ低い音を弾けないときは 100 などに上げる。
+    """
+    lo, hi = max(NORM_RANGE[0], min_hz), min(NORM_RANGE[1], max_hz)
     tn = normalized_third(target, lo, hi)
     rows = []
     for idx, (name, f) in enumerate(cands):
         cn = normalized_third(f, lo, hi)
-        diff = {k: round(cn[k] - tn[k], 2) for k in tn if k in cn and DIST_MIN_HZ <= float(k) <= max_hz}
+        diff = {k: round(cn[k] - tn[k], 2) for k in tn if k in cn and min_hz <= float(k) <= max_hz}
         if not diff:
             raise ValueError(f"{name}: 比べられる帯域がありません")
         dist = math.sqrt(float(np.mean([d * d for d in diff.values()])))
@@ -84,7 +88,7 @@ def compare_features(target: dict, cands: list[tuple[str, dict]], max_hz: float 
     for i, r in enumerate(rows, 1):
         r["rank"] = i
     return {
-        "settings": {"max_hz": max_hz, "dist_min_hz": DIST_MIN_HZ, "norm_range_hz": [lo, hi]},
+        "settings": {"max_hz": max_hz, "dist_min_hz": min_hz, "norm_range_hz": [lo, hi]},
         "target_third_octave_norm_db": tn,
         "candidates": rows,
     }
@@ -177,6 +181,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--target-end", type=float, help="目標の測る区間の終わり（秒）")
     ap.add_argument("recs", type=Path, nargs="+", help="候補の録音（reamp.py run の出力）")
     ap.add_argument("--max-hz", type=float, default=10000.0, help="距離に入れる上限（stem が目標なら 5000）")
+    ap.add_argument("--min-hz", type=float, default=DIST_MIN_HZ,
+                    help="距離と揃えに入れる下限（DI で原曲の低い音を弾けないときは 100 など）")
     ap.add_argument("--plot", type=Path, help="1/3 オクターブの曲線を描いた PNG")
     ap.add_argument("-o", "--out", type=Path, help="結果の JSON")
     a = ap.parse_args(argv)
@@ -190,7 +196,7 @@ def main(argv: list[str] | None = None) -> int:
     for p in a.recs:
         print(f"候補を測っています: {p}", file=sys.stderr, flush=True)
         cands.append((p.stem, features_of(p)))
-    res = compare_features(tf, cands, a.max_hz)
+    res = compare_features(tf, cands, a.max_hz, a.min_hz)
     res = {
         "target": {"path": str(a.target), "start_sec": a.target_start, "end_sec": a.target_end,
                    "rms_dbfs": tf["level"]["rms_dbfs"]},

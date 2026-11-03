@@ -88,3 +88,10 @@ def test_table_and_plot(base, tmp_path):
 
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-q", "-p", "no:cacheprovider"]))
+
+
+def test_min_hz_excludes_low_bands(base):
+    _, f = base
+    res = compare_features(f, [("same", f)], min_hz=100)
+    assert min(float(k) for k in res["candidates"][0]["band_diff_db"]) >= 100
+    assert res["settings"]["norm_range_hz"][0] == 100
