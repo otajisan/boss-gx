@@ -40,18 +40,19 @@ OD/DS は共通の一覧に BASS OD・BASS DI・SA DI DRIVE などベース用�
 |---|---|---|---|
 | AMP byte 2 `type_bass` | 5 | TYPE: **CLAS BLUE** | GX-1B のアンプは byte 2 を使う（byte 1 = 1 は使われていない） |
 | AMP byte 9 `sp_type_bass` | 3 | SP TYPE: **B1 x 18** | GX-1B のスピーカーは byte 9 を使う |
-| FX1_COM byte 1/2 | 0 / 0 | FX TYPE: COMPRESSOR | FX の種類の番号は GX-1 の FX_TYPES と同じ |
+| FX1_COM byte 1/2 | 0 / 0 | FX TYPE: COMPRESSOR | 0・13・17 は GX-1 とたまたま同じ。**FX の一覧は GX-1B では並びが違う**（`gx-1b.md`） |
 | FX2_COM byte 1/2 | 13 / 13 | FX TYPE: PARA.EQ | 同上 |
 | FX3_COM byte 1/2 | 17 / 17 | FX TYPE: CHORUS | 同上 |
 | FX1 本体 byte 0 / byte 4 | 0 / 3 | TYPE: **X-COMP** | GX-1 ではコンプの種類は byte 0（0=BOSS COMP … 3=X-COMP）。見本は byte 0 = 0 で、byte 4 = 3。**GX-1B のコンプの種類は byte 4 にある**と考えられる（GX-1 の番号表と同じなら 3 = X-COMP）。FX2・FX3 の byte 4 は 0 |
 
 ### まだわからないこと
 
-- GX-1B のアンプ（16 種）・スピーカーの番号と名前の**残り**。わかっているのは 5 = CLAS BLUE、スピーカー 3 = B1 x 18 だけ。公式の Parameter Guide の一覧の順に当てはめ、BTS で何点か確かめる
+- アンプ・スピーカー・OD/DS・FX の一覧は Parameter Guide の並び順で `gx-1b.md` に書いた（見本と合う）。✅ のないものは BTS で確かめる
 - コンプ以外にも、種類を GX-1 と違う場所に持つ FX があるか（CHORUS・OD/DS など、本体の先頭に種類を持つもの）
 - tonesmith で読むと、ベース用の欄は「そのまま残す」だけで解釈されない（アンプは GX-1 の 1 番 `NATURAL` と出る）。GX-1B の値を読み書きするのはこちらの処理で行う
 
-## 書き込みの方針（案）
+## 書き込みの方針（決定）
 
-- tonesmith の codec（ブロックの読み書き）はそのまま使える。`device` の文字列と、ベース用の欄・番号の一覧を GX-1B 用に足す
-- やり方: tonesmith に手を入れず、`device` を読む前に `"GX-1"`、書いた後に `"GX-1B"` に戻す薄い包みを `tools/gxpatch/` に作り、GX-1B の一覧はこちらで持つ
+- tonesmith は GX-1B のベース用の欄を解釈しない（そのまま残すだけ）ので、GX-1B の書き込みには使わない
+- `tools/gxpatch.py`（Python）: 確かめ済みの本物のパッチを**型紙**にして、意味がわかっている欄（AMP・OD/DS・NS、各ブロックの ON/OFF、名前）だけを書き換える。わからない欄は型紙のまま
+- tonesmith の FORMAT.md は、バイトの位置を調べるときの資料として使う
