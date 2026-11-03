@@ -52,3 +52,40 @@
 - `DRY TO EFX` ON（PC から送った DI を EFX に通す）: 上の測定で動作を確認
 - `LOOPBACK` OFF: 上の測定はこの設定
 - `DIR.MON.` の扱い: 未確認
+
+## 使い方（1 ラウンドの流れ）
+
+ツール: `tools/reamp.py`（録る・リアンプ）、`tools/compare.py`（目標と比べる）。録音は `output/reamp/<名前>/` に置く（コミットしない）。
+`reamp.py` は対話しない。1 回の実行で 1 パッチを録るので、パッチの切り替えは実行の合間に本人が本体で行う（PC からは切り替えられない）。
+
+1. **準備**: GX は `DRY TO EFX` ON・`LOOPBACK` OFF。候補のパッチ（U01〜）を BTS で読み込んでおく
+2. **DI を録る**（本人が弾く。1 回だけ）
+   ```
+   tools/reamp.py record-di --seconds 30 --wait 3 -o output/reamp/undead-r5/di.wav
+   ```
+   - 入力 ch3（DRY）を録る。`--wait` 秒待ってから録り始める。原曲の目標区間に近いフレーズ・弾き方で弾く
+   - 終わりにピーク・RMS を表示。クリップ・小さすぎは警告が出るので録り直す
+3. **パッチごとにリアンプ**（本人が本体で U01 → U02 … と切り替え、そのたびに 1 回実行）
+   ```
+   tools/reamp.py run output/reamp/undead-r5/di.wav --label U01 -o output/reamp/undead-r5/U01.wav
+   ```
+   - 出力 ch3-4 に「パルス（1 ms・-10 dBFS）→ 無音 0.5 秒 → DI」を送り、入力 ch1-2 を録る。パルスの立ち上がりで遅れを測り、DI の頭に揃えて保存する（長さは DI と同じ）
+   - 横に `U01.json`（遅れのサンプル数・RMS・ピーク・警告）ができる。遅れが前の回と大きく違う、パルスが録れない（エラー）ときは GX 側の設定を見直す
+   - DI が 48 kHz でなければ変換、ピークが 0 dBFS を超えるなら -1 dBFS に下げて送る（警告が出る）
+   - 実行中はパッチの音がそのまま GX から出る。ヘッドホン・アンプの音量に注意
+4. **比べる**
+   ```
+   tools/compare.py --target "input/UNDEAD - Bass.wav" --target-start 20 --target-end 50 \
+       output/reamp/undead-r5/U0*.wav --plot output/reamp/undead-r5/compare.png -o output/reamp/undead-r5/compare.json
+   ```
+   - 目標が曲から分けた stem（`separate.py` の出力）なら `--max-hz 5000`（stem は 5 kHz より上が削れている）
+   - 距離: 1/3 オクターブを目標・候補それぞれ 63 Hz〜5 kHz の平均で 0 dB に揃え、40 Hz〜`--max-hz` の差の RMS（dB）。小さいほど近い
+   - 帯域ごとの差は「候補 − 目標」。`800 Hz +5.0` なら 800 Hz が目標より 5 dB 多い
+   - 補助: 歪み差（upper_harmonic_db）・ばらつき差（range_p95_p10_db、- はコンプが強い）・減り方差・crest 差
+   - 音量: 各候補の RMS と、一番大きい候補との差（パッチ間の音量差。同じ DI から録るので比べられる）。目標の RMS は曲のミックスの値なので、候補との絶対値の比較には使わない
+5. **bass-tech に渡す**: `compare.json`（または表）と、各パッチの tone.json を渡し、次の候補や音量の合わせ方を決めてもらう
+
+### 実機での確認（2026-11-03）
+
+- 合成したベースっぽい音（3 秒・ピーク -20 dBFS・44.1 kHz → 48 kHz に変換）を `run` で通した: 遅れ **12496 サンプル（260.3 ms）**。上の 12499 との 3 サンプル差は、立ち上がりの決め方（`reamp.py` は 10 ms の中の最大の半分を超えた点）の違い
+- 保存した録音の最初の音の立ち上がりは、DI より 50 サンプル（約 1 ms）ほど遅い。パッチの EQ・キャビでパルスと音の立ち上がりの形が変わるため。時間で平均した音色を比べるので問題ない
