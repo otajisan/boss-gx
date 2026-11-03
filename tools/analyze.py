@@ -9,7 +9,7 @@
 knowledge/gx/mapping.md にある。
 
 使い方:
-  tools/analyze.py output/<曲>/bass.wav [-o features.json] [--instrument bass|guitar]
+  tools/analyze.py output/<曲>/bass.wav [-o features.json] [--instrument bass|guitar] [--start 20 --end 28]
 """
 from __future__ import annotations
 
@@ -192,10 +192,16 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("wav", type=Path)
     ap.add_argument("-o", "--out", type=Path, help="書き出す features.json（省略時は wav と同じ場所）")
     ap.add_argument("--instrument", choices=list(BANDS), default="bass")
+    ap.add_argument("--start", type=float, default=0.0, help="測る区間の開始（秒）")
+    ap.add_argument("--end", type=float, help="測る区間の終わり（秒）")
     a = ap.parse_args(argv)
 
     x, sr = load_mono(a.wav)
-    feats = {"source": str(a.wav), **analyze(x, sr, a.instrument)}
+    end = len(x) if a.end is None else int(a.end * sr)
+    x = x[int(a.start * sr):end]
+    if len(x) < sr:
+        raise SystemExit("区間が短すぎます（1 秒以上にしてください）")
+    feats = {"source": str(a.wav), "start_sec": a.start, "end_sec": a.end, **analyze(x, sr, a.instrument)}
     out = a.out or a.wav.with_name(a.wav.stem + ".features.json")
     out.write_text(json.dumps(feats, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps(feats, ensure_ascii=False, indent=2))
