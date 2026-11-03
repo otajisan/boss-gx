@@ -63,4 +63,8 @@
 - スラップはローも欲しい（bass 75 前後）
 
 R2（`seventeen-r2.tsl`）: U01 NORMAL A（bass 50 / middle 55 / treble 50、DYN57） / U02 NORMAL B（middle 60 / treble 60、B4x10） / U03 SLAP A（bass 75 / treble 55、DYN421） / U04 SLAP B（treble 50、B2x15、RIBON121）
-結果（R2）: 未
+結果（R2）: **NORMAL は A、SLAP は B がイメージに近い**（ユーザー）→ 採用。`knowledge/tones/seventeen/` に保存
+
+採用した値から言えること（1 曲・1 人の耳。まだ仮のルール）:
+- 指弾き・ピック（通常）: クリーン寄りのアンプ（CONCERT gain 45）で、bass 50 / middle 55 / treble 50 の平らに近い EQ、マイク DYN57。B（middle 60 / treble 60、B4x10）は行き過ぎ
+- スラップ: SW-TOUR gain 30、bass 75 / middle 40 / treble 50（ローを足し、ミッドを少し下げ、高域は控えめ）、B2x15 + RIBON121 で高域の痛さを抑える

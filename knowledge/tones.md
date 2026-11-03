@@ -4,5 +4,12 @@
 |---|---|---|---|---|---|
 | 2026-11-03 | セブンティーン 0:20〜0:28（通常） | GX-1B | 17 NORMAL | `output/セブンティーン/seventeen.tsl` U01 | モコモコ・輪郭なし（R1 外れ） |
 | 2026-11-03 | セブンティーン 0:28〜0:40（スラップ） | GX-1B | 17 SLAP | 同 U02 | アタックが痛い・ローが足りない（R1 外れ） |
-| 2026-11-03 | セブンティーン 通常 | GX-1B | 17 NORMAL A / B | `output/セブンティーン/seventeen-r2.tsl` U01 / U02 | 未 |
-| 2026-11-03 | セブンティーン スラップ | GX-1B | 17 SLAP A / B | 同 U03 / U04 | 未 |
+| 2026-11-03 | セブンティーン 通常 | GX-1B | 17 NORMAL A / B | `output/セブンティーン/seventeen-r2.tsl` U01 / U02 | **A を採用**（B は行き過ぎ） |
+| 2026-11-03 | セブンティーン スラップ | GX-1B | 17 SLAP A / B | 同 U03 / U04 | **B を採用** |
+
+## 採用した音（tone.json は `knowledge/tones/<曲>/`）
+
+| 曲 | パターン | tone.json | 要点 |
+|---|---|---|---|
+| セブンティーン | 通常（0:20〜0:28） | `tones/seventeen/normal.json` | CONCERT gain 45、50/55/50、B8x10、DYN57、コンプ ON |
+| セブンティーン | スラップ（0:28〜0:40） | `tones/seventeen/slap.json` | SW-TOUR gain 30、75/40/50、B2x15、RIBON121、コンプ ON |

@@ -1,0 +1,39 @@
+{
+  "name": "17 NORMAL",
+  "device": "GX-1B",
+  "notes": "採用（R2 NORMAL-A）。R2。モコモコ・輪郭なし → treble 30→50、middle 45→55、bass 60→50、mic DYN421→DYN57",
+  "fx1": {
+    "on": true
+  },
+  "odds": {
+    "on": false
+  },
+  "amp": {
+    "on": true,
+    "type": "CONCERT",
+    "gain": 45,
+    "level": 45,
+    "bass": 50,
+    "middle": 55,
+    "treble": 50,
+    "speaker": "B8x10",
+    "mic": "DYN57"
+  },
+  "ns": {
+    "on": true,
+    "threshold": 20,
+    "release": 30
+  },
+  "fx2": {
+    "on": false
+  },
+  "fx3": {
+    "on": false
+  },
+  "delay": {
+    "on": false
+  },
+  "reverb": {
+    "on": false
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "17 SLAP",
+  "device": "GX-1B",
+  "notes": "採用（R2 SLAP-B）。R2。A よりさらに柔らかく太く: treble 50、speaker B4x10→B2x15、mic RIBON121（暖かいリボン）",
+  "fx1": {
+    "on": true
+  },
+  "odds": {
+    "on": false
+  },
+  "amp": {
+    "on": true,
+    "type": "SW-TOUR",
+    "gain": 30,
+    "level": 45,
+    "bass": 75,
+    "middle": 40,
+    "treble": 50,
+    "speaker": "B2x15",
+    "mic": "RIBON121"
+  },
+  "ns": {
+    "on": true,
+    "threshold": 20,
+    "release": 30
+  },
+  "fx2": {
+    "on": false
+  },
+  "fx3": {
+    "on": false
+  },
+  "delay": {
+    "on": false
+  },
+  "reverb": {
+    "on": false
+  }
+}
