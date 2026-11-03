@@ -138,4 +138,9 @@ R4（`output/rounds/r4-undead/`）: クリーンなアンプ、EQ で中域を�
 - SLAP A: NATURAL gain 25、60/35/60 ＋ EQ（LOW CUT 31.5Hz、LOW +4、1kHz -7、HIGH +5）、X-COMP 4:1・DIRECT 40・ATTACK 70 / B: アンプを SW-TOUR に
 - FINGER A: NATURAL gain 30、55/40/55 ＋ EQ（LOW CUT 31.5Hz、LOW +3、800Hz -6、HIGH +3）、X-COMP 3:1・DIRECT 50 / B: アンプを STUDIO に
 
-結果（R4）: 未
+結果（R4、ユーザー）: **スラップ・指弾きとも B がイメージに近い**（SW-TOUR / STUDIO）。音量がちょっと小さい → amp level 45→60、EQ level +3dB にして採用（`knowledge/tones/undead/`）
+
+学び:
+- 1/3 オクターブで形を見て EQ を決めたら、1 回で方向が合った
+- ハイファイな音には SW-TOUR（スラップ）・STUDIO（指弾き）。NATURAL よりキャラクターがあるほうが近い
+- EQ で大きく削る・コンプの DIRECT を上げると音量が下がる。amp level か EQ level で戻す（他のパッチとの音量差は、リアンプで測れるようにしたい）

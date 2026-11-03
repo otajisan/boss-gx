@@ -1,0 +1,56 @@
+{
+  "name": "UNDEAD FINGER",
+  "device": "GX-1B",
+  "notes": "採用（R4 finger-b）。音量が小さいとの感想で amp level 45→60、EQ level 0→+3dB。A のアンプを STUDIO（Markbass。祝福・明るめで当たり）に",
+  "fx1": {
+    "on": true,
+    "comp": {
+      "threshold": 60,
+      "attack": 60,
+      "level": 45,
+      "ratio": "3:1",
+      "direct": 50
+    }
+  },
+  "odds": {
+    "on": false
+  },
+  "amp": {
+    "on": true,
+    "level": 60,
+    "type": "STUDIO",
+    "gain": 30,
+    "bass": 55,
+    "middle": 40,
+    "treble": 55,
+    "speaker": "B4x10",
+    "mic": "CND87"
+  },
+  "ns": {
+    "on": true,
+    "threshold": 20,
+    "release": 30
+  },
+  "fx2": {
+    "on": true,
+    "type": "PARA. EQ",
+    "peq": {
+      "level": 3,
+      "high_cut": "FLAT",
+      "low_cut": "31.5Hz",
+      "low_gain": 3,
+      "mid_freq": "800Hz",
+      "mid_gain": -6,
+      "high_gain": 3
+    }
+  },
+  "fx3": {
+    "on": false
+  },
+  "delay": {
+    "on": false
+  },
+  "reverb": {
+    "on": false
+  }
+}

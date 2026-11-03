@@ -13,8 +13,8 @@
 | 2026-11-03 | 祝福 暗め | GX-1B | SHUKU DARK 1 / 2 | 同 U03 / U04 | **2 を採用** |
 | 2026-11-03 | UNDEAD | GX-1B | UNDEAD 1 / 2 | 同 U05 / U06 | どちらも潰れて抜けが悪い（コンプ 12:1 が疑わしい） |
 | 2026-11-03 | UNDEAD | GX-1B | UNDEAD 1 / 2 / 3（R3） | `output/rounds/r3-undead/undead-r3.tsl` U01〜U03 | イメージに近づかない（中域を持ち上げていたのが逆だった） |
-| 2026-11-03 | UNDEAD 40〜55 秒（スラップ） | GX-1B | UNDEAD SLAP A / B | `output/rounds/r4-undead/undead-r4.tsl` U01 / U02 | 未 |
-| 2026-11-03 | UNDEAD 56〜67 秒（指弾き） | GX-1B | UNDEAD FINGER A / B | 同 U03 / U04 | 未 |
+| 2026-11-03 | UNDEAD 40〜55 秒（スラップ） | GX-1B | UNDEAD SLAP A / B | `output/rounds/r4-undead/undead-r4.tsl` U01 / U02 | **B を採用**（音量が小さい → 上げた） |
+| 2026-11-03 | UNDEAD 56〜67 秒（指弾き） | GX-1B | UNDEAD FINGER A / B | 同 U03 / U04 | **B を採用**（同上） |
 
 ## 採用した音（tone.json は `knowledge/tones/<曲>/`）
 
@@ -24,3 +24,5 @@
 | セブンティーン | スラップ（0:28〜0:40） | `tones/seventeen/slap.json` | SW-TOUR gain 30、75/40/50、B2x15、RIBON121、コンプ ON |
 | 祝福 | 明るめ（0:40〜0:52） | `tones/shukufuku/bright.json` | STUDIO gain 35、50/60/55、B4x10、DYN57 ＋ BASS DI（drive 25、direct 70）＋ EQ（LOW CUT 40Hz、800Hz +3、HIGH +2） |
 | 祝福 | 暗め（1:16〜1:36） | `tones/shukufuku/dark.json` | CLAS BLUE gain 20、60/50/45、B1x18、DYN57 ＋ EQ（LOW CUT 40Hz、250Hz -3、LOW +3、HIGH CUT 5kHz） |
+| UNDEAD | スラップ（40〜55 秒） | `tones/undead/slap.json` | SW-TOUR gain 25、60/35/60、level 60、B4x10、CND87 ＋ EQ（LOW CUT 31.5Hz、LOW +4、1kHz -7、HIGH +5、LEVEL +3）＋ X-COMP 4:1・DIRECT 40・ATTACK 70 |
+| UNDEAD | 指弾き（56〜67 秒） | `tones/undead/finger.json` | STUDIO gain 30、55/40/55、level 60、B4x10、CND87 ＋ EQ（LOW CUT 31.5Hz、LOW +3、800Hz -6、HIGH +3、LEVEL +3）＋ X-COMP 3:1・DIRECT 50 |

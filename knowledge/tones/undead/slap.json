@@ -1,0 +1,56 @@
+{
+  "name": "UNDEAD SLAP",
+  "device": "GX-1B",
+  "notes": "採用（R4 slap-b）。音量が小さいとの感想で amp level 45→60、EQ level 0→+3dB。A のアンプを SW-TOUR（セブンティーンのスラップで当たり）に",
+  "fx1": {
+    "on": true,
+    "comp": {
+      "threshold": 60,
+      "attack": 70,
+      "level": 45,
+      "ratio": "4:1",
+      "direct": 40
+    }
+  },
+  "odds": {
+    "on": false
+  },
+  "amp": {
+    "on": true,
+    "level": 60,
+    "type": "SW-TOUR",
+    "gain": 25,
+    "bass": 60,
+    "middle": 35,
+    "treble": 60,
+    "speaker": "B4x10",
+    "mic": "CND87"
+  },
+  "ns": {
+    "on": true,
+    "threshold": 20,
+    "release": 30
+  },
+  "fx2": {
+    "on": true,
+    "type": "PARA. EQ",
+    "peq": {
+      "level": 3,
+      "high_cut": "FLAT",
+      "low_cut": "31.5Hz",
+      "low_gain": 4,
+      "mid_freq": "1kHz",
+      "mid_gain": -7,
+      "high_gain": 5
+    }
+  },
+  "fx3": {
+    "on": false
+  },
+  "delay": {
+    "on": false
+  },
+  "reverb": {
+    "on": false
+  }
+}
