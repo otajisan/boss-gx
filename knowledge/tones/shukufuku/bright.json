@@ -1,0 +1,54 @@
+{
+  "name": "SHUKU BRIGHT",
+  "device": "GX-1B",
+  "notes": "採用（R2 shuku-bright-2）。1 ＋ OD/DS BASS DI（MXR Bass D.I.+）を薄く: drive 25、direct 70 で原音を残して芯を足す",
+  "fx1": {
+    "on": true
+  },
+  "odds": {
+    "on": true,
+    "type": "BASS DI",
+    "drive": 25,
+    "tone": 0,
+    "level": 45,
+    "direct": 70
+  },
+  "amp": {
+    "on": true,
+    "level": 45,
+    "type": "STUDIO",
+    "gain": 35,
+    "bass": 50,
+    "middle": 60,
+    "treble": 55,
+    "speaker": "B4x10",
+    "mic": "DYN57"
+  },
+  "ns": {
+    "on": true,
+    "threshold": 20,
+    "release": 30
+  },
+  "fx2": {
+    "on": true,
+    "type": "PARA. EQ",
+    "peq": {
+      "level": 0,
+      "low_gain": 0,
+      "mid_gain": 3,
+      "high_gain": 2,
+      "mid_freq": "800Hz",
+      "low_cut": "40Hz",
+      "high_cut": "FLAT"
+    }
+  },
+  "fx3": {
+    "on": false
+  },
+  "delay": {
+    "on": false
+  },
+  "reverb": {
+    "on": false
+  }
+}

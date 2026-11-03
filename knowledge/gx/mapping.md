@@ -98,4 +98,17 @@ R2（`output/rounds/r2-shukufuku-undead/`）: 当たったアンプはそのま�
 - 祝福・暗め 1: CLAS BLUE gain 20 ＋ EQ（LOW CUT 40Hz、250Hz -3） / 2: 1 ＋ LOW +3、HIGH CUT 5kHz
 - UNDEAD 1: CONCERT gain 50 ＋ EQ（LOW CUT 40Hz、1kHz +3、HIGH +2） / 2: gain 40 ＋ SA DI DRIVE（drive 35、direct 60）＋ 同じ EQ
 
-結果（R2）: 未
+結果（R2、ユーザー）: **祝福・明るめは 2（BASS DI を薄く）、祝福・暗めは 2（LOW +3、HIGH CUT 5kHz）→ 採用**（`knowledge/tones/shukufuku/`）。**UNDEAD はどちらも音が潰れて抜けが悪い**
+
+学び:
+- OD/DS を direct 多め（70）で薄く足すと芯が出て良い（祝福・明るめ）
+- 指弾きの丸い音は、アンプの高域ではなく EQ の HIGH CUT（5kHz）で丸めると良い（祝福・暗め）。アンプの TREBLE を下げてこもらせる（セブンティーン R1）のとは違う
+- **型紙のコンプ（X-COMP、THRESHOLD 60、RATIO 12:1、DIRECT 0）はかなり強い**。ここまでの全パッチにかかっていた。歪み（gain 50）や中域の持ち上げと重なると潰れる
+  - UNDEAD は原音がフルレンジで抜けている音なので、とくに目立った
+
+R3（`output/rounds/r3-undead/`）: 潰れの原因を切り分ける
+- 1: コンプを軽く（RATIO 4:1、DIRECT 50、ATTACK 60）、gain 35、EQ の持ち上げを 2kHz +3（抜け）・HIGH +3
+- 2: 1 からコンプ OFF
+- 3: 1 ＋ SA DI DRIVE ごく薄く（drive 20、direct 80）
+
+結果（R3）: 未
