@@ -1,0 +1,56 @@
+{
+  "name": "SHUKUFUKU",
+  "device": "GX-1B",
+  "notes": "採用（R8-4、EQ level +3→+1 で R6-1 の -14dBFS に音量をそろえた）。曲全体を 1 パッチで（ピック弾き）。R8-3 ＋ 中域をもっと削る: amp middle 35→25（800Hz〜1kHz が +9〜+11 残っていた）",
+  "fx1": {
+    "on": true,
+    "comp": {
+      "threshold": 60,
+      "attack": 60,
+      "level": 45,
+      "ratio": "4:1",
+      "direct": 25
+    }
+  },
+  "odds": {
+    "on": false
+  },
+  "amp": {
+    "on": true,
+    "level": 60,
+    "type": "SW-TOUR",
+    "gain": 30,
+    "bass": 70,
+    "middle": 25,
+    "treble": 48,
+    "speaker": "B4x10",
+    "mic": "RIBON121"
+  },
+  "ns": {
+    "on": true,
+    "threshold": 20,
+    "release": 30
+  },
+  "fx2": {
+    "on": true,
+    "type": "PARA. EQ",
+    "peq": {
+      "level": 1,
+      "low_gain": 1,
+      "mid_gain": -10,
+      "high_gain": -3,
+      "mid_freq": "800Hz",
+      "low_cut": "40Hz",
+      "high_cut": "4kHz"
+    }
+  },
+  "fx3": {
+    "on": false
+  },
+  "delay": {
+    "on": false
+  },
+  "reverb": {
+    "on": false
+  }
+}
