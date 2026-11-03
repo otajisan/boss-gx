@@ -27,6 +27,8 @@
 3. **bass-tech**: パターンごとに A/B の tone.json（`output/rounds/`）
 4. **gx-operator**: 1 つの .tsl にまとめて確認 → ユーザーに案内
 5. ★ユーザーが BTS で読み込んで弾き、感想を返す → 3 に戻る（bass-tech が手直し）
+   - **リアンプで数値でも比べる（Phase 2）**: 本人の DI（目標の区間と同じ弾き方・音域）を `tools/reamp.py record-di` で録り、本体のパッチを切り替えるたびに `reamp.py run`、`tools/compare.py` で目標と比べる（手順は `knowledge/gx/reamp-setup.md`）。目標は `input/<曲> - Bass.wav`（ベース＋ドラム）から取り出した stem、`--max-hz 3150`。リアンプの前に、本体のパッチ名が候補のものか確かめる
+   - 司令塔は録音のたびに「5 秒後に録ります」「U01 に切り替えて」とユーザーに声をかけ、1 回ずつ実行する（Bash は対話できない）
 6. 採用が決まったら、bass-tech が `knowledge/tones/`・`mapping.md`・`tones.md` に記録し、gx-operator が採用版の .tsl を作る
 
 - 曲の音源・stem・録音・.tsl（`input/`・`output/`）はコミットしない。push はユーザーの確認を取ってから。
