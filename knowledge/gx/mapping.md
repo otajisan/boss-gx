@@ -68,3 +68,22 @@ R2（`seventeen-r2.tsl`）: U01 NORMAL A（bass 50 / middle 55 / treble 50、DYN
 採用した値から言えること（1 曲・1 人の耳。まだ仮のルール）:
 - 指弾き・ピック（通常）: クリーン寄りのアンプ（CONCERT gain 45）で、bass 50 / middle 55 / treble 50 の平らに近い EQ、マイク DYN57。B（middle 60 / treble 60、B4x10）は行き過ぎ
 - スラップ: SW-TOUR gain 30、bass 75 / middle 40 / treble 50（ローを足し、ミッドを少し下げ、高域は控えめ）、B2x15 + RIBON121 で高域の痛さを抑える
+
+### 2026-11-03: 祝福（明るめ 0:40〜0:52・暗め 1:16〜1:36）と UNDEAD（0:16〜0:28）
+
+| 特徴 | 祝福・明るめ | 祝福・暗め | UNDEAD（ベースだけの音源） |
+|---|---|---|---|
+| centroid_hz | 269 | 105 | 240 |
+| mid / high_mid / high | -19 / -12 / -55 | -30 / -24 / -55 | -21 / -17 / **-21** |
+| upper_harmonic_db | -16 | -12 | -16 |
+| decay_db_per_sec | -35 | -16 | -23 |
+| crest_factor_db | 13.9 | 11.5 | 12.7 |
+| range_p95_p10_db | 8.7 | 7.5 | 7.4 |
+
+- UNDEAD のチューニング: pyin（16 kHz に下げて長い窓）で最低 約 46 Hz・中央 約 54 Hz → 4 弦レギュラーの音域。`analyze.py` の `voiced_frames` が少なかったのは、48 kHz で窓 4096（85 ms）だと低い音の基音が取りにくいため（直す候補）
+- 下書き（`output/rounds/r1-shukufuku-undead/`）: セブンティーンで当たった「ほぼ平らな EQ」から出発し、主にアンプの種類で A/B を作った
+  - 祝福・明るめ: STUDIO / CONCERT、50/60/55
+  - 祝福・暗め: FLIPTOP（B1x15）/ CLAS BLUE（B1x18）、60/50/45（暗さを写しすぎない）
+  - UNDEAD: SOLID STK（CND87）/ CONCERT gain 50（DYN57）、55/50/60
+
+結果: 未

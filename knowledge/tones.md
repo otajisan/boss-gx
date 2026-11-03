@@ -6,6 +6,9 @@
 | 2026-11-03 | セブンティーン 0:28〜0:40（スラップ） | GX-1B | 17 SLAP | 同 U02 | アタックが痛い・ローが足りない（R1 外れ） |
 | 2026-11-03 | セブンティーン 通常 | GX-1B | 17 NORMAL A / B | `output/セブンティーン/seventeen-r2.tsl` U01 / U02 | **A を採用**（B は行き過ぎ） |
 | 2026-11-03 | セブンティーン スラップ | GX-1B | 17 SLAP A / B | 同 U03 / U04 | **B を採用** |
+| 2026-11-03 | 祝福 0:40〜0:52（明るめ） | GX-1B | SHUKU BRIGHT A / B | `output/rounds/r1-shukufuku-undead/shukufuku-undead.tsl` U01 / U02 | 未 |
+| 2026-11-03 | 祝福 1:16〜1:36（暗め） | GX-1B | SHUKU DARK A / B | 同 U03 / U04 | 未 |
+| 2026-11-03 | UNDEAD 0:16〜0:28 | GX-1B | UNDEAD A / B | 同 U05 / U06 | 未 |
 
 ## 採用した音（tone.json は `knowledge/tones/<曲>/`）
 
