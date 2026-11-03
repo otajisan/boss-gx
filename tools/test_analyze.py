@@ -61,6 +61,18 @@ def test_slow_decay_is_detected():
     assert fast < slow < 0
 
 
+def test_third_octave_finds_notch():
+    """1kHz 付近を削ると、1/3 オクターブでその位置に谷が見える。"""
+    rng = np.random.default_rng(1)
+    noise = rng.normal(0, 0.1, SR * 3).astype(np.float32)
+    sos = ss.butter(2, [700, 1400], "bandstop", fs=SR, output="sos")
+    notched = ss.sosfilt(sos, noise).astype(np.float32)
+    a, b = analyze(noise, SR)["third_octave_db"], analyze(notched, SR)["third_octave_db"]
+    assert a["100"] == 0.0 and b["100"] == 0.0
+    assert b["1000"] < a["1000"] - 10
+    assert abs(b["4000"] - a["4000"]) < 2
+
+
 if __name__ == "__main__":
     import pytest
 

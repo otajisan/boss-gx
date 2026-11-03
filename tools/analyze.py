@@ -42,6 +42,11 @@ BANDS = {
 }
 F0_RANGE = {"bass": (30.0, 400.0), "guitar": (75.0, 1000.0)}
 
+# 1/3 オクターブの中心周波数。EQ の山と谷の位置を見るために使う（帯域の平均 bands_db では見えない）
+THIRD_OCTAVE = [31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600,
+                2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000]
+THIRD_REF_HZ = 100  # この帯域を 0 dB にそろえる
+
 FRAME = 4096
 HOP = 1024
 SILENCE_DB = -45.0  # 最大のフレームからこれより小さいフレームは無音として除く
@@ -71,6 +76,20 @@ def band_levels(S_pow: np.ndarray, freqs: np.ndarray, bands: dict) -> dict:
         sel = (freqs >= lo) & (freqs < hi)
         out[name] = round(float(10 * np.log10(S_pow[sel].sum() / total + 1e-20)), 2)
     return out
+
+
+def third_octave(x: np.ndarray, sr: int) -> dict:
+    """1/3 オクターブごとのレベル（100 Hz を 0 dB）。Welch 法で時間平均したスペクトルから測る。"""
+    import scipy.signal as ss
+
+    nper = min(16384, len(x))
+    f, P = ss.welch(x, sr, nperseg=nper)
+    out = {}
+    for c in THIRD_OCTAVE:
+        sel = (f >= c / 2 ** (1 / 6)) & (f < c * 2 ** (1 / 6))
+        out[c] = 10 * np.log10(P[sel].sum() + 1e-20) if sel.any() else None
+    ref = out[THIRD_REF_HZ]
+    return {f"{c:g}": (round(float(v - ref), 1) if v is not None else None) for c, v in out.items()}
 
 
 def harmonic_distortion(x: np.ndarray, sr: int, fmin: float, fmax: float) -> dict:
@@ -173,6 +192,7 @@ def analyze(x: np.ndarray, sr: int, instrument: str = "bass") -> dict:
             "crest_factor_db": round(20 * np.log10((peak + 1e-12) / (rms_all + 1e-12)), 2) if len(xa) else None,
         },
         "bands_db": band_levels(spec, freqs, BANDS[instrument]),
+        "third_octave_db": third_octave(x, sr),
         "brightness": {
             "centroid_hz": round(centroid, 1),
             "rolloff85_hz": round(rolloff, 1),
