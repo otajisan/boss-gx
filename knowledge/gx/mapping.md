@@ -53,4 +53,14 @@
 - スラップ: 明るい・アタックが鋭い・短い → SW-TOUR（SWR）gain 30、bass 65 / middle 40 / treble 70、B4x10、CND87、コンプ ON
 - 型紙の PARA.EQ・CHORUS は中身が不明なので OFF
 
-結果（ユーザーが弾いた感想）: 未
+結果（ユーザーが弾いた感想、R1）:
+- 17 NORMAL: **モコモコしすぎて輪郭がない** → 外れ。treble 30・DYN421・B8x10 で暗くしすぎた
+- 17 SLAP: **アタックが痛すぎる、ローが足りない** → 外れ。treble 70・CND87 で高域を出しすぎ、bass 65 では足りない
+
+学び:
+- **stem の「暗さ」をそのまま設定に写さない**。stem は他の楽器に隠れる分と分離で削れる分だけ、実際より暗く測れる。mid / high_mid が低くても、TREBLE・MIDDLE は中くらい（50 前後）から始める
+- スラップの「2〜5 kHz が強い」は、原曲ではミックスの中で抜けて聞こえる量。単体で弾くと痛い。TREBLE は 50〜55 くらい、マイクは高域が穏やかなもの（DYN421・RIBON121）から
+- スラップはローも欲しい（bass 75 前後）
+
+R2（`seventeen-r2.tsl`）: U01 NORMAL A（bass 50 / middle 55 / treble 50、DYN57） / U02 NORMAL B（middle 60 / treble 60、B4x10） / U03 SLAP A（bass 75 / treble 55、DYN421） / U04 SLAP B（treble 50、B2x15、RIBON121）
+結果（R2）: 未
