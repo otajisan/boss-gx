@@ -56,3 +56,7 @@ OD/DS は共通の一覧に BASS OD・BASS DI・SA DI DRIVE などベース用�
 - tonesmith は GX-1B のベース用の欄を解釈しない（そのまま残すだけ）ので、GX-1B の書き込みには使わない
 - `tools/gxpatch.py`（Python）: 確かめ済みの本物のパッチを**型紙**にして、意味がわかっている欄（AMP・OD/DS・NS、各ブロックの ON/OFF、名前）だけを書き換える。わからない欄は型紙のまま
 - tonesmith の FORMAT.md は、バイトの位置を調べるときの資料として使う
+
+## 生成したファイルが BTS で読み込めるか
+
+- 2026-11-03: `gxpatch.py build` で作った 2 パッチの liveset（AMP の種類・値、スピーカー、マイク、NS、各ブロックの ON/OFF、名前を書き換えたもの）が、**BTS で読み込めた**（ユーザーが確認）
