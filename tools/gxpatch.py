@@ -41,6 +41,20 @@ FX_TYPES = ["COMPRESSOR", "LIMITER", "ENHANCER", "TOUCH WAH", "AUTO WAH", "FIXED
             "OVERTONE", "PAN", "RING MOD", "HUMANIZER", "PITCH SHIFT", "HARMONIST", "OCTAVE", "HEAVY OCT", "S-BEND",
             "PEDAL BEND", "TUNE DOWN", "DELAY", "REVERB"]
 
+FREQ_STEPS = ["20Hz", "25Hz", "31.5Hz", "40Hz", "50Hz", "63Hz", "80Hz", "100Hz", "125Hz", "160Hz", "200Hz",
+              "250Hz", "315Hz", "400Hz", "500Hz", "630Hz", "800Hz", "1kHz", "1.25kHz", "1.6kHz", "2kHz", "2.5kHz",
+              "3.15kHz", "4kHz", "5kHz", "6.3kHz", "8kHz", "10kHz", "12.5kHz"]
+FREQ_LOW_CUT = ["FLAT", *FREQ_STEPS]
+FREQ_HIGH_CUT = [*FREQ_STEPS, "FLAT"]
+
+# PARA. EQ: FX 本体の byte 31 から（GX-1 の FORMAT.md と同じ並び。見本の FX2 で値の形を確かめた）
+PEQ_OFFSET = 31
+PEQ_FIELDS = [
+    (0, "low_gain", (-20, 20)), (1, "high_gain", (-20, 20)), (2, "level", (-20, 20)),
+    (3, "mid_freq", FREQ_STEPS), (4, "mid_gain", (-20, 20)), (5, "low_cut", FREQ_LOW_CUT), (6, "high_cut", FREQ_HIGH_CUT),
+]
+PEQ_SIGNED = {"low_gain", "high_gain", "level", "mid_gain"}
+
 # (バイト位置, 名前, 範囲 or 一覧)
 AMP_FIELDS = [
     (0, "on", bool), (2, "type", AMP_TYPES), (3, "gain", (0, 120)), (4, "level", (0, 100)),
@@ -74,7 +88,7 @@ def _name_bytes(name: str) -> list[str]:
     return [f"{b:02X}" for b in raw]
 
 
-def _encode(block: str, field: str, spec, value) -> int:
+def _encode(block: str, field: str, spec, value, center: int | None = None) -> int:
     where = f"{block}.{field}"
     if spec is bool:
         if not isinstance(value, bool):
@@ -87,15 +101,41 @@ def _encode(block: str, field: str, spec, value) -> int:
     lo, hi = spec
     if not isinstance(value, int) or isinstance(value, bool) or not lo <= value <= hi:
         raise ToneError(f"{where} は {lo}〜{hi} の整数: {value!r}")
-    return value + SIGNED_CENTER.get((block, field), 0)
+    return value + (center if center is not None else SIGNED_CENTER.get((block, field), 0))
 
 
-def _decode(block: str, field: str, spec, raw: int):
+def _decode(block: str, field: str, spec, raw: int, center: int | None = None):
     if spec is bool:
         return bool(raw)
     if isinstance(spec, list):
         return spec[raw] if raw < len(spec) else f"?{raw}"
-    return raw - SIGNED_CENTER.get((block, field), 0)
+    return raw - (center if center is not None else SIGNED_CENTER.get((block, field), 0))
+
+
+def _apply_fx(ps: dict, key: str, vals: dict) -> None:
+    """FX スロット: on / type と、type が PARA. EQ のときの peq（中身）を書く。"""
+    com, body = SWITCHES[key], "MEMORY%" + key.upper()
+    bad = set(vals) - {"on", "type", "peq"}
+    if bad:
+        raise ToneError(f"{key} に知らない項目: {sorted(bad)}")
+    if "on" in vals:
+        ps[com][0] = f"{_encode(key, 'on', bool, vals['on']):02X}"
+    if "type" in vals:
+        if vals["type"] != "PARA. EQ":
+            raise ToneError(f"{key}.type は今は PARA. EQ だけ変えられる（他は中身の並びが未確認）: {vals['type']!r}")
+        t = f"{FX_TYPES.index('PARA. EQ'):02X}"
+        ps[com][1] = ps[com][2] = t  # 見本では byte 1 と 2 が同じ値
+    cur = FX_TYPES[int(ps[com][2], 16)] if int(ps[com][2], 16) < len(FX_TYPES) else None
+    if "peq" in vals:
+        if cur != "PARA. EQ":
+            raise ToneError(f"{key}.peq は type が PARA. EQ のときだけ（今は {cur}）")
+        by_name = {f: (i, sp) for i, f, sp in PEQ_FIELDS}
+        bad = set(vals["peq"]) - set(by_name)
+        if bad:
+            raise ToneError(f"{key}.peq に知らない項目: {sorted(bad)}")
+        for f, v in vals["peq"].items():
+            i, sp = by_name[f]
+            ps[body][PEQ_OFFSET + i] = f"{_encode(key, f, sp, v, 20 if f in PEQ_SIGNED else 0):02X}"
 
 
 def apply_tone(param_set: dict, tone: dict) -> dict:
@@ -123,6 +163,9 @@ def apply_tone(param_set: dict, tone: dict) -> dict:
         vals = tone.get(key)
         if vals is None:
             continue
+        if key.startswith("fx"):
+            _apply_fx(ps, key, vals)
+            continue
         bad = set(vals) - {"on"}
         if bad:
             raise ToneError(f"{key} は on だけ書き換えられる（中身は型紙のまま）: {sorted(bad)}")
@@ -142,6 +185,10 @@ def read_tone(param_set: dict) -> dict:
         if key.startswith("fx"):
             t = int(b[2], 16)  # GX-1B は byte 2（ベース用の欄）
             tone[key]["type"] = FX_TYPES[t] if t < len(FX_TYPES) else f"?{t}"
+            if tone[key]["type"] == "PARA. EQ":
+                body = param_set["MEMORY%" + key.upper()]
+                tone[key]["peq"] = {f: _decode(key, f, sp, int(body[PEQ_OFFSET + i], 16), 20 if f in PEQ_SIGNED else 0)
+                                    for i, f, sp in PEQ_FIELDS}
     return tone
 
 

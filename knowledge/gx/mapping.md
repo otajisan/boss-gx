@@ -86,4 +86,16 @@ R2（`seventeen-r2.tsl`）: U01 NORMAL A（bass 50 / middle 55 / treble 50、DYN
   - 祝福・暗め: FLIPTOP（B1x15）/ CLAS BLUE（B1x18）、60/50/45（暗さを写しすぎない）
   - UNDEAD: SOLID STK（CND87）/ CONCERT gain 50（DYN57）、55/50/60
 
-結果: 未
+結果（R1、ユーザー）: **祝福・明るめは A（STUDIO）、祝福・暗めは B（CLAS BLUE）だが歪みが強すぎる、UNDEAD は B（CONCERT）**。「EQ や OD/DS もうまく使ってほしい」
+
+学び:
+- CLAS BLUE は gain 35 でもはっきり歪む。クリーンにするなら 20 くらいから
+- CONCERT（SVT）はセブンティーン NORMAL・UNDEAD の 2 曲で当たり。汎用の出発点にしてよい
+- アンプと EQ（50 前後）だけでは物足りない。PARA.EQ（アンプの後ろ）と OD/DS（アンプの前）で仕上げる
+
+R2（`output/rounds/r2-shukufuku-undead/`）: 当たったアンプはそのまま、EQ と OD/DS を足す
+- 祝福・明るめ 1: STUDIO ＋ EQ（LOW CUT 40Hz、800Hz +3、HIGH +2） / 2: 1 ＋ BASS DI（drive 25、direct 70）
+- 祝福・暗め 1: CLAS BLUE gain 20 ＋ EQ（LOW CUT 40Hz、250Hz -3） / 2: 1 ＋ LOW +3、HIGH CUT 5kHz
+- UNDEAD 1: CONCERT gain 50 ＋ EQ（LOW CUT 40Hz、1kHz +3、HIGH +2） / 2: gain 40 ＋ SA DI DRIVE（drive 35、direct 60）＋ 同じ EQ
+
+結果（R2）: 未

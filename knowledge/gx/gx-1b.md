@@ -11,7 +11,7 @@
 | ODDS（OD/DS） | 0 on、1 type、2 drive、3 tone（50 が 0）、4 level、5 direct | drive 0〜120、tone -50〜+50 |
 | NS | 0 on、1 threshold、2 release、3 detect | 0〜100 |
 | FX1〜3_COM | 0 on、**byte 2 type** | |
-| FX 本体（251 バイト） | GX-1 と並びが違う欄がある（コンプの TYPE は byte 4 と考えられる）。**未解明なので型紙のまま使う** | |
+| FX 本体（251 バイト） | **PARA. EQ は byte 31〜37**（GX-1 と同じ: low_gain, high_gain, level, mid_freq, mid_gain, low_cut, high_cut。ゲインは 20 が 0 dB）。それ以外は GX-1 と並びが違う欄がある（コンプの TYPE は byte 4 と考えられる）ので型紙のまま | ゲイン -20〜+20 dB |
 
 AMP の byte 1・8、FX_COM の byte 1 はギター用の欄。GX-1B では書き換えない。
 
@@ -63,3 +63,12 @@ AMP の byte 1・8、FX_COM の byte 1 はギター用の欄。GX-1B では書�
 ✅ のないもの（7 以降の多く）は並び順からの推定。使う前に BTS で 1 度確かめる。
 
 COMPRESSOR の TYPE: BOSS COMP（CS-3） / D-COMP（MXR Dyna Comp） / ORANGE（Orange Squeezer） / X-COMP ✅ / STEREO
+
+## PARA. EQ の周波数
+
+MID FREQ: 20Hz〜12.5kHz の 1/3 オクターブ（0 = 20Hz … 16 = 800Hz、17 = 1kHz … 28 = 12.5kHz）。LOW CUT は 0 = FLAT、1〜29 が 20Hz〜12.5kHz。HIGH CUT は 0〜28 が 20Hz〜12.5kHz、29 = FLAT。
+見本の FX2 はこの読み方で LOW -2 / MID 800Hz +6 / HIGH +2 / LEVEL +2 / LOW CUT 63Hz / HIGH CUT FLAT（**BTS の表示とはまだ照らし合わせていない**）。
+
+## コンプ（FX の COMPRESSOR）の推定
+
+GX-1 ではコンプは byte 0〜3（TYPE・SUSTAIN・ATTACK・LEVEL）。見本の FX1 は byte 0〜3 = 0/50/50/60（GX-1 の初期値のまま）、**byte 4〜8 = 3/60/40/45/15**。GX-1B のコンプは DIRECT があるので、byte 4〜8 = TYPE（3 = X-COMP ✅）/ SUSTAIN / ATTACK / LEVEL / DIRECT と考えられる（**未確認**）。

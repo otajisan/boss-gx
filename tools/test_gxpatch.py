@@ -33,13 +33,35 @@ def test_reads_sample_as_bts_shows():
     assert [t[k]["type"] for k in ("fx1", "fx2", "fx3")] == ["COMPRESSOR", "PARA. EQ", "CHORUS"]
 
 
+def test_reads_sample_peq():
+    """見本の FX2（PARA. EQ）の中身。BTS の表示とはまだ照らし合わせていない。"""
+    peq = g.read_tone(tpl_ps())["fx2"]["peq"]
+    assert peq == {"low_gain": -2, "high_gain": 2, "level": 2, "mid_freq": "800Hz", "mid_gain": 6,
+                   "low_cut": "63Hz", "high_cut": "FLAT"}
+
+
 def test_roundtrip_is_identical():
     """読んだ tone をそのまま書き戻すと、型紙と 1 バイトも変わらない。"""
     ps = tpl_ps()
     t = g.read_tone(ps)
-    for k in ("fx1", "fx2", "fx3"):
+    for k in ("fx1", "fx3"):
         t[k].pop("type")
     assert g.apply_tone(ps, t) == ps
+
+
+def test_peq_writes_only_eq_bytes():
+    ps = tpl_ps()
+    out = g.apply_tone(ps, {"fx2": {"on": True, "type": "PARA. EQ",
+                                    "peq": {"low_cut": "40Hz", "mid_freq": "1kHz", "mid_gain": 3, "high_gain": -1}}})
+    body = out["MEMORY%FX2"]
+    assert body[31 + 5] == "04" and body[31 + 3] == "11" and body[31 + 4] == "17" and body[31 + 1] == "13"
+    diff = [i for i, (a, b) in enumerate(zip(ps["MEMORY%FX2"], body)) if a != b]
+    assert diff and all(31 <= i <= 37 for i in diff)
+
+
+def test_peq_needs_peq_type():
+    with pytest.raises(g.ToneError):
+        g.apply_tone(tpl_ps(), {"fx3": {"peq": {"mid_gain": 3}}})  # FX3 は CHORUS
 
 
 def test_build_changes_only_named_bytes():
@@ -63,6 +85,8 @@ def test_build_file_has_one_patch_per_tone(tmp_path):
     {"odds": {"tone": 51}},
     {"amp": {"volume": 1}},
     {"fx1": {"type": "CHORUS"}},
+    {"fx2": {"peq": {"mid_gain": 21}}},
+    {"fx2": {"peq": {"mid_freq": "900Hz"}}},
     {"device": "GX-1"},
     {"name": "日本語"},
     {"name": "X" * 17},
