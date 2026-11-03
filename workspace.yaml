@@ -1,0 +1,5 @@
+id: boss-gx
+type: personal
+description: "曲の音源から BOSS GX-1 / GX-1B のパッチ（.tsl）を作り、リアンプで詰める"
+# 使う共有の専門家（shared/experts/）。改行して `- ad-business` のように 1 行に 1 つずつ書く（[a, b] でも可）。変更したら kb sync を実行する
+experts: []

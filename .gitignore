@@ -1,0 +1,9 @@
+# 曲の音源（著作物）・stem・録音・生成物はコミットしない
+input/
+output/
+
+# 環境
+.venv/
+node_modules/
+__pycache__/
+.DS_Store
