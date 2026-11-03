@@ -12,7 +12,9 @@
 | 2026-11-03 | 祝福 明るめ | GX-1B | SHUKU BRIGHT 1 / 2 | `output/rounds/r2-shukufuku-undead/shukufuku-undead-r2.tsl` U01 / U02 | **2 を採用** |
 | 2026-11-03 | 祝福 暗め | GX-1B | SHUKU DARK 1 / 2 | 同 U03 / U04 | **2 を採用** |
 | 2026-11-03 | UNDEAD | GX-1B | UNDEAD 1 / 2 | 同 U05 / U06 | どちらも潰れて抜けが悪い（コンプ 12:1 が疑わしい） |
-| 2026-11-03 | UNDEAD | GX-1B | UNDEAD 1 / 2 / 3（R3） | `output/rounds/r3-undead/undead-r3.tsl` U01〜U03 | 未 |
+| 2026-11-03 | UNDEAD | GX-1B | UNDEAD 1 / 2 / 3（R3） | `output/rounds/r3-undead/undead-r3.tsl` U01〜U03 | イメージに近づかない（中域を持ち上げていたのが逆だった） |
+| 2026-11-03 | UNDEAD 40〜55 秒（スラップ） | GX-1B | UNDEAD SLAP A / B | `output/rounds/r4-undead/undead-r4.tsl` U01 / U02 | 未 |
+| 2026-11-03 | UNDEAD 56〜67 秒（指弾き） | GX-1B | UNDEAD FINGER A / B | 同 U03 / U04 | 未 |
 
 ## 採用した音（tone.json は `knowledge/tones/<曲>/`）
 
