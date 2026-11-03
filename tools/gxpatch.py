@@ -55,6 +55,20 @@ PEQ_FIELDS = [
 ]
 PEQ_SIGNED = {"low_gain", "high_gain", "level", "mid_gain"}
 
+# COMPRESSOR（GX-1B）: FX 本体の byte 4〜9。X-COMP で BTS の表示と照らし合わせた
+# （byte 0〜3 は GX-1 のコンプの欄で、GX-1B では使われない）
+COMP_OFFSET = 4
+COMP_TYPES = ["BOSS COMP", "D-COMP", "ORANGE", "X-COMP", "STEREO"]  # 3 = X-COMP だけ確かめた
+# RATIO の一覧（BOSS の一般的な並び）。15 = 12:1 だけ確かめた
+RATIOS = ["1:1", "1.2:1", "1.4:1", "1.6:1", "1.8:1", "2:1", "2.3:1", "2.6:1", "3:1", "3.5:1", "4:1", "5:1", "6:1",
+          "8:1", "10:1", "12:1", "20:1", "INF:1"]
+XCOMP_FIELDS = [(0, "type", ["X-COMP"]), (1, "threshold", (0, 100)), (2, "attack", (0, 100)), (3, "level", (0, 100)),
+                (4, "ratio", RATIOS), (5, "direct", (0, 100))]
+# CHORUS: FX 本体の byte 123〜127（GX-1 と同じ）。RATE / DEPTH / LEVEL / DIRECT を BTS で確かめた。
+# TYPE（MONO/STEREO など）は GX-1B では byte 122 ではない（未解明なので書かない）
+CHORUS_OFFSET = 123
+CHORUS_FIELDS = [(0, "rate", (0, 100)), (1, "depth", (0, 100)), (2, "level", (0, 100)), (4, "direct", (0, 100))]
+
 # (バイト位置, 名前, 範囲 or 一覧)
 AMP_FIELDS = [
     (0, "on", bool), (2, "type", AMP_TYPES), (3, "gain", (0, 120)), (4, "level", (0, 100)),
@@ -115,7 +129,7 @@ def _decode(block: str, field: str, spec, raw: int, center: int | None = None):
 def _apply_fx(ps: dict, key: str, vals: dict) -> None:
     """FX スロット: on / type と、type が PARA. EQ のときの peq（中身）を書く。"""
     com, body = SWITCHES[key], "MEMORY%" + key.upper()
-    bad = set(vals) - {"on", "type", "peq"}
+    bad = set(vals) - {"on", "type", "peq", "comp", "chorus"}
     if bad:
         raise ToneError(f"{key} に知らない項目: {sorted(bad)}")
     if "on" in vals:
@@ -136,6 +150,22 @@ def _apply_fx(ps: dict, key: str, vals: dict) -> None:
         for f, v in vals["peq"].items():
             i, sp = by_name[f]
             ps[body][PEQ_OFFSET + i] = f"{_encode(key, f, sp, v, 20 if f in PEQ_SIGNED else 0):02X}"
+    for sub, need, offset, fields in (("comp", "COMPRESSOR", COMP_OFFSET, XCOMP_FIELDS),
+                                      ("chorus", "CHORUS", CHORUS_OFFSET, CHORUS_FIELDS)):
+        if sub not in vals:
+            continue
+        if cur != need:
+            raise ToneError(f"{key}.{sub} は FX の種類が {need} のときだけ（今は {cur}）")
+        if sub == "comp" and COMP_TYPES[int(ps[body][COMP_OFFSET], 16)] != "X-COMP" and vals[sub].get("type") != "X-COMP":
+            raise ToneError(f"{key}.comp は今は X-COMP だけ（他の TYPE は中身の並びが未確認）")
+        by_name = {f: (i, sp) for i, f, sp in fields}
+        bad = set(vals[sub]) - set(by_name)
+        if bad:
+            raise ToneError(f"{key}.{sub} に知らない項目: {sorted(bad)}")
+        for f, v in vals[sub].items():
+            i, sp = by_name[f]
+            raw = 3 if (sub, f) == ("comp", "type") else _encode(key, f, sp, v)
+            ps[body][offset + i] = f"{raw:02X}"
 
 
 def apply_tone(param_set: dict, tone: dict) -> dict:
@@ -185,6 +215,15 @@ def read_tone(param_set: dict) -> dict:
         if key.startswith("fx"):
             t = int(b[2], 16)  # GX-1B は byte 2（ベース用の欄）
             tone[key]["type"] = FX_TYPES[t] if t < len(FX_TYPES) else f"?{t}"
+            body = param_set["MEMORY%" + key.upper()]
+            if tone[key]["type"] == "COMPRESSOR":
+                ct = int(body[COMP_OFFSET], 16)
+                tone[key]["comp_type"] = COMP_TYPES[ct] if ct < len(COMP_TYPES) else f"?{ct}"
+                if tone[key]["comp_type"] == "X-COMP":
+                    tone[key]["comp"] = {f: _decode(key, f, sp, int(body[COMP_OFFSET + i], 16))
+                                         for i, f, sp in XCOMP_FIELDS[1:]}
+            if tone[key]["type"] == "CHORUS":
+                tone[key]["chorus"] = {f: int(body[CHORUS_OFFSET + i], 16) for i, f, _ in CHORUS_FIELDS}
             if tone[key]["type"] == "PARA. EQ":
                 body = param_set["MEMORY%" + key.upper()]
                 tone[key]["peq"] = {f: _decode(key, f, sp, int(body[PEQ_OFFSET + i], 16), 20 if f in PEQ_SIGNED else 0)

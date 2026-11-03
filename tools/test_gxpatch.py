@@ -40,12 +40,28 @@ def test_reads_sample_peq():
                    "low_cut": "63Hz", "high_cut": "FLAT"}
 
 
+def test_reads_sample_comp_and_chorus_as_bts_shows():
+    """BTS の表示（ユーザーのスクリーンショット）と同じ。"""
+    t = g.read_tone(tpl_ps())
+    assert t["fx1"]["comp_type"] == "X-COMP"
+    assert t["fx1"]["comp"] == {"threshold": 60, "attack": 40, "level": 45, "ratio": "12:1", "direct": 0}
+    assert t["fx3"]["chorus"] == {"rate": 48, "depth": 43, "level": 50, "direct": 100}
+
+
+def test_comp_writes_only_comp_bytes():
+    ps = tpl_ps()
+    out = g.apply_tone(ps, {"fx1": {"comp": {"threshold": 40, "ratio": "4:1"}}})
+    diff = [i for i, (a, b) in enumerate(zip(ps["MEMORY%FX1"], out["MEMORY%FX1"])) if a != b]
+    assert diff == [5, 8] and out["MEMORY%FX1"][5] == "28" and out["MEMORY%FX1"][8] == "0A"
+
+
 def test_roundtrip_is_identical():
     """読んだ tone をそのまま書き戻すと、型紙と 1 バイトも変わらない。"""
     ps = tpl_ps()
     t = g.read_tone(ps)
     for k in ("fx1", "fx3"):
         t[k].pop("type")
+    t["fx1"].pop("comp_type")
     assert g.apply_tone(ps, t) == ps
 
 
@@ -86,6 +102,9 @@ def test_build_file_has_one_patch_per_tone(tmp_path):
     {"amp": {"volume": 1}},
     {"fx1": {"type": "CHORUS"}},
     {"fx2": {"peq": {"mid_gain": 21}}},
+    {"fx2": {"comp": {"threshold": 40}}},
+    {"fx1": {"comp": {"ratio": "7:1"}}},
+    {"fx1": {"chorus": {"rate": 10}}},
     {"fx2": {"peq": {"mid_freq": "900Hz"}}},
     {"device": "GX-1"},
     {"name": "日本語"},

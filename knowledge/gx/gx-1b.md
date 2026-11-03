@@ -11,7 +11,7 @@
 | ODDS（OD/DS） | 0 on、1 type、2 drive、3 tone（50 が 0）、4 level、5 direct | drive 0〜120、tone -50〜+50 |
 | NS | 0 on、1 threshold、2 release、3 detect | 0〜100 |
 | FX1〜3_COM | 0 on、**byte 2 type** | |
-| FX 本体（251 バイト） | **PARA. EQ は byte 31〜37**（GX-1 と同じ: low_gain, high_gain, level, mid_freq, mid_gain, low_cut, high_cut。ゲインは 20 が 0 dB）。それ以外は GX-1 と並びが違う欄がある（コンプの TYPE は byte 4 と考えられる）ので型紙のまま | ゲイン -20〜+20 dB |
+| FX 本体（251 バイト） | **PARA. EQ は byte 31〜37 ✅**、**COMPRESSOR は byte 4〜9 ✅**（X-COMP）、**CHORUS は byte 123〜127 ✅**（TYPE を除く）。下の節を参照。その他の FX は未確認なので型紙のまま | |
 
 AMP の byte 1・8、FX_COM の byte 1 はギター用の欄。GX-1B では書き換えない。
 
@@ -67,8 +67,27 @@ COMPRESSOR の TYPE: BOSS COMP（CS-3） / D-COMP（MXR Dyna Comp） / ORANGE（
 ## PARA. EQ の周波数
 
 MID FREQ: 20Hz〜12.5kHz の 1/3 オクターブ（0 = 20Hz … 16 = 800Hz、17 = 1kHz … 28 = 12.5kHz）。LOW CUT は 0 = FLAT、1〜29 が 20Hz〜12.5kHz。HIGH CUT は 0〜28 が 20Hz〜12.5kHz、29 = FLAT。
-見本の FX2 はこの読み方で LOW -2 / MID 800Hz +6 / HIGH +2 / LEVEL +2 / LOW CUT 63Hz / HIGH CUT FLAT（**BTS の表示とはまだ照らし合わせていない**）。
+見本の FX2 はこの読み方で LOW -2 / MID 800Hz +6 / HIGH +2 / LEVEL +2 / LOW CUT 63Hz / HIGH CUT FLAT。**BTS の表示と全部一致 ✅**（2026-11-03、スクリーンショット）。
 
-## コンプ（FX の COMPRESSOR）の推定
+## COMPRESSOR（FX 本体 byte 4〜9）✅
 
-GX-1 ではコンプは byte 0〜3（TYPE・SUSTAIN・ATTACK・LEVEL）。見本の FX1 は byte 0〜3 = 0/50/50/60（GX-1 の初期値のまま）、**byte 4〜8 = 3/60/40/45/15**。GX-1B のコンプは DIRECT があるので、byte 4〜8 = TYPE（3 = X-COMP ✅）/ SUSTAIN / ATTACK / LEVEL / DIRECT と考えられる（**未確認**）。
+GX-1 のコンプは byte 0〜3 だが、GX-1B は **byte 4〜9** を使う（byte 0〜3 は GX-1 の初期値のまま残っている）。
+見本の X-COMP を BTS の表示と照らし合わせた（2026-11-03）:
+
+| byte | 値 | 表示 |
+|---|---|---|
+| 4 | 3 | TYPE: X-COMP |
+| 5 | 60 | THRESHOLD 60 |
+| 6 | 40 | ATTACK 40 |
+| 7 | 45 | LEVEL 45 |
+| 8 | 15 | RATIO 12:1 |
+| 9 | 0 | DIRECT 0 |
+
+- **X-COMP の項目は THRESHOLD / ATTACK / LEVEL / RATIO / DIRECT**（ガイドのコンプの表にある SUSTAIN ではない）
+- RATIO は BOSS の一般的な一覧（1:1, 1.2:1, … 10:1, 12:1, 20:1, INF:1）と考え、15 = 12:1 だけ確かめた
+- BOSS COMP など他の TYPE の並びは未確認（`gxpatch.py` は X-COMP だけ書く）
+
+## CHORUS（FX 本体 byte 122〜127）
+
+見本の FX3 で BTS の表示と照らし合わせた: byte 123 RATE 48 ✅ / 124 DEPTH 43 ✅ / 125 LEVEL 50 ✅ / 126 PRE DELAY?（4） / 127 DIRECT 100 ✅。
+TYPE は STEREO と表示されるが byte 122 は 0（GX-1 なら MONO）。GX-1B の TYPE は別の場所（byte 250 = 1 が候補）。未解明なので書かない。
