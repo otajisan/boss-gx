@@ -7,3 +7,14 @@ output/
 node_modules/
 __pycache__/
 .DS_Store
+
+# 音声ファイルはどこに置いてもコミットしない（著作物の誤 push を防ぐ）
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.aac
+*.aif
+*.aiff
+*.ogg
+.pytest_cache/
