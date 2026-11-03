@@ -31,6 +31,8 @@ my-work-knowledge-base の workspace として、Claude Code が専門家（エ�
 ```sh
 cd <my-work-knowledge-base>/workspaces
 git clone https://github.com/otajisan/boss-gx.git
+cd boss-gx
+git config core.hooksPath tools/git-hooks   # 音声ファイルのコミットを止めるフックを有効にする
 kb boss-gx   # この workspace で Claude Code を起動
 ```
 
@@ -47,4 +49,6 @@ kb boss-gx   # この workspace で Claude Code を起動
 ## 注意
 
 - 曲の音源・stem・録音は著作物を含むため、コミットしません（私的な利用の範囲で使います）。
+  - `.gitignore` で `input/`・`output/` と音声ファイル（`*.wav` `*.mp3` など）を除外し、
+    さらに `tools/git-hooks/pre-commit` が、強制的に add されたものもコミットの前に止めます。
 - パッチは PC から直接書き込めないため、生成した .tsl は BOSS TONE STUDIO で手で読み込みます。

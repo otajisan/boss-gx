@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# 音声ファイルと input/ / output/ の中身がコミットに入っていたら止める。
+bad=$(git diff --cached --name-only --diff-filter=ACMR | grep -i -E '^(input|output)/|\.(wav|mp3|flac|m4a|aac|aiff?|ogg)$' || true)
+if [ -n "$bad" ]; then
+  echo "pre-commit: 音声ファイル（著作物の可能性あり）がコミットに含まれています。外してください:" >&2
+  echo "$bad" >&2
+  exit 1
+fi

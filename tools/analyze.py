@@ -149,8 +149,11 @@ def analyze(x: np.ndarray, sr: int, instrument: str = "bass") -> dict:
     freqs = librosa.fft_frequencies(sr=sr, n_fft=FRAME)
     spec = S_act.mean(axis=1)
 
-    centroid = librosa.feature.spectral_centroid(S=np.sqrt(S_act), sr=sr)[0]
-    rolloff = librosa.feature.spectral_rolloff(S=np.sqrt(S_act), sr=sr, roll_percent=0.85)[0]
+    # 明るさは「鳴っている区間を平均したパワースペクトル」で測る。フレームごとの重心の中央値だと、
+    # 小さい音のフレーム（弦のノイズなど）に引っぱられて、ベースでは何 kHz にもなってしまう。
+    centroid = float((spec * freqs).sum() / (spec.sum() + 1e-20))
+    cum = np.cumsum(spec) / (spec.sum() + 1e-20)
+    rolloff = float(freqs[min(int(np.searchsorted(cum, 0.85)), len(freqs) - 1)])
     flatness = librosa.feature.spectral_flatness(S=np.sqrt(S_act))[0]
 
     xa = x[np.abs(x) > 0]
@@ -171,8 +174,8 @@ def analyze(x: np.ndarray, sr: int, instrument: str = "bass") -> dict:
         },
         "bands_db": band_levels(spec, freqs, BANDS[instrument]),
         "brightness": {
-            "centroid_hz": round(float(np.median(centroid)), 1),
-            "rolloff85_hz": round(float(np.median(rolloff)), 1),
+            "centroid_hz": round(centroid, 1),
+            "rolloff85_hz": round(rolloff, 1),
             "flatness": round(float(np.median(flatness)), 5),
         },
         "distortion": harmonic_distortion(x, sr, fmin, fmax),
